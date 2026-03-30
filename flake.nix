@@ -21,8 +21,8 @@
           devShells.default = pkgs.mkShell {
             buildInputs = [
               pkgs.bun
+              pkgs.nodejs
 
-              pkgs.ansible
               (pkgs.writeShellScriptBin "tofu" ''
                 exec ${pkgs.opentofu}/bin/tofu -chdir=infra "$@"
               '')
@@ -30,8 +30,6 @@
               pkgs.fluxcd
               pkgs.sops
               pkgs.talosctl
-
-              pkgs.uv # for jcodemunch
             ];
           };
         };
