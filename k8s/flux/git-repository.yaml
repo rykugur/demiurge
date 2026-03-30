@@ -1,0 +1,12 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: demiurge
+  namespace: flux-system
+spec:
+  interval: 1m
+  url: https://github.com/dustyhorizon/demiurge
+  ref:
+    branch: main
+  secretRef:
+    name: demiurge-github-token
