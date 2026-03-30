@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demiurge
+  namespace: demiurge
+  labels:
+    app: demiurge
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demiurge
+  template:
+    metadata:
+      labels:
+        app: demiurge
+    spec:
+      serviceAccountName: demiurge
+      containers:
+        - name: demiurge
+          image: demiurge:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+            - name: health
+              containerPort: 8080
+              protocol: TCP
+          env:
+            - name: DEMIURGE_PORT
+              value: "3000"
+            - name: DEMIURGE_HEALTH_PORT
+              value: "8080"
+            - name: DEMIURGE_LOOP_INTERVAL_MS
+              value: "30000"
+            - name: DEMIURGE_DATA_DIR
+              value: "/data"
+            - name: DEMIURGE_DATABASE_PATH
+              value: "/data/demiurge.db"
+            - name: DEMIURGE_WORKSPACES_DIR
+              value: "/data/workspaces"
+            - name: DEMIURGE_DIRECTIVES_DIR
+              value: "/data/directives"
+            - name: DEMIURGE_REPO_URL
+              value: "https://github.com/dustyhorizon/demiurge"
+            - name: DEMIURGE_BRANCH
+              value: "main"
+            - name: DEMIURGE_GIT_AUTHOR_NAME
+              value: "Hadrian"
+            - name: DEMIURGE_GIT_AUTHOR_EMAIL
+              value: "hadrian@demiurge.local"
+            - name: DEMIURGE_ENABLED_AGENTS
+              value: "hadrian,valka,palino,lorian,otavia"
+            - name: DEMIURGE_GITHUB_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: demiurge-secrets
+                  key: github-token
+            - name: DEMIURGE_OPENCODE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: demiurge-secrets
+                  key: opencode-api-key
+          volumeMounts:
+            - name: data
+              mountPath: /data
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: demiurge-data
