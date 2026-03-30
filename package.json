@@ -1,0 +1,19 @@
+{
+  "name": "demiurge-workspace",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "cd apps/demiurge && bun run dev",
+    "build": "cd apps/demiurge && bun run build",
+    "test": "cd apps/demiurge && bun test",
+    "server": "cd apps/demiurge && bun run server",
+    "lint": "cd apps/demiurge && bun run lint",
+    "typecheck": "cd apps/demiurge && bun run typecheck",
+    "docker:build": "docker build -t demiurge:latest -f apps/demiurge/Dockerfile apps/demiurge",
+    "k8s:apply": "kubectl apply -k k8s/base",
+    "k8s:delete": "kubectl delete -k k8s/base"
+  }
+}

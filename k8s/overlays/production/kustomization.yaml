@@ -1,0 +1,27 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: demiurge
+
+resources:
+  - ../../base
+
+patches:
+  - target:
+      kind: Deployment
+      name: demiurge
+    patch: |
+      - op: replace
+        path: /spec/replicas
+        value: 1
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/limits/memory
+        value: 1Gi
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/limits/cpu
+        value: 1000m
+
+images:
+  - name: demiurge
+    newName: ghcr.io/dustyhorizon/demiurge
+    newTag: v0.1.0

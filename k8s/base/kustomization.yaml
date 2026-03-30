@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: demiurge
+
+resources:
+  - deployment.yaml
+  - service.yaml
+  - pvc.yaml
+  - rbac.yaml
+  - secrets.yaml
+
+commonLabels:
+  app: demiurge
+  tier: orchestrator
