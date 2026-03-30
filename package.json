@@ -2,9 +2,6 @@
   "name": "demiurge-workspace",
   "version": "0.1.0",
   "private": true,
-  "workspaces": [
-    "apps/*"
-  ],
   "scripts": {
     "dev": "cd apps/demiurge && bun run dev",
     "build": "cd apps/demiurge && bun run build",
