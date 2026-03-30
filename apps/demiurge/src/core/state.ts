@@ -1,11 +1,11 @@
-import DatabaseConstructor from 'better-sqlite3';
+import { Database as BunDatabase } from 'bun:sqlite';
 import type { Task, TaskStatus, AgentType, TaskPriority } from '@/core/types';
 
 export class Database {
-  private db: DatabaseConstructor.Database;
+  private db: BunDatabase;
 
   constructor(dbPath: string) {
-    this.db = new DatabaseConstructor(dbPath);
+    this.db = new BunDatabase(dbPath, { create: true });
     this.init();
   }
 
