@@ -38,6 +38,7 @@ All core infrastructure delivered and merged to main:
 - 🔄 External Skills Integration
 - ⏳ Local-First Migration (Ollama)
 - ⏳ Enhanced Autonomy
+- ⏳ Dashboard Enhancements (rotating agent quotes)
 
 ### Pending
 - ⏳ Multi-agent skill collaboration (Valka + Palino for frontend-design)
@@ -110,6 +111,41 @@ skills:
 - Skills integration should be backwards compatible (optional feature)
 - Consider rate limiting and caching for external skill URLs
 - May need local fallback if external skills are unavailable
+
+---
+
+### Enhancement 2: Rotating Quotes on Agent Cards
+
+**Status:** Planned  
+**Priority:** Low  
+**Estimated Effort:** 1 task  
+**Dependencies:** Phase 1 complete
+
+**Description:**
+Enhance the dashboard UI by making the quotes on each agent "hero card" rotate through a collection of quotes from the Sun Eater series. Each agent should have multiple quotes that cycle periodically or on refresh.
+
+**Example Implementation:**
+```typescript
+// Each agent has a collection of quotes
+const hadrianQuotes = [
+  "I am not the man I was... but I am the man I must be.",
+  "We are all of us prisoners of our own experience.",
+  // ... more quotes
+];
+
+// Rotate every 30 seconds or on page refresh
+const currentQuote = hadrianQuotes[rotationIndex];
+```
+
+**Files to Modify:**
+- `apps/demiurge/src/app/page.tsx` - Dashboard with agent cards
+- `apps/demiurge/src/agents/*.ts` - Add quote collections to agent classes
+
+**Notes:**
+- Keep the current static quote as default
+- Add 3-5 additional quotes per agent from the Sun Eater books
+- Make rotation optional (configurable via environment variable)
+- Consider using React state or CSS animation for smooth transitions
 
 ---
 
