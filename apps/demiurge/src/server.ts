@@ -3,7 +3,7 @@ import { Database } from '@/core/state';
 import { GitClient } from '@/core/git-client';
 import { TaskRouter } from '@/core/task-router';
 import { createAgent } from '@/agents';
-import { AgentType, Task, TaskStatus } from '@/core/types';
+import { AgentType, Task, TaskStatus, TaskPriority } from '@/core/types';
 import { mkdirSync, existsSync, readdirSync, readFileSync } from 'fs';
 import { join } from 'path';
 import YAML from 'yaml';
