@@ -65,3 +65,10 @@ export interface AgentAction {
   description: string;
   payload: unknown;
 }
+
+export interface LLMProvider {
+  name: string;
+  tier: number;
+  isAvailable(): Promise<boolean>;
+  generate(prompt: string, systemPrompt?: string): Promise<string>;
+}
