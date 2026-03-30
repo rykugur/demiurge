@@ -1,68 +1,158 @@
 export default function Home() {
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-100">
-      <div className="container mx-auto px-4 py-8">
+    <main className="min-h-screen relative z-10">
+      <div className="container mx-auto px-4 py-8 max-w-7xl">
         {/* Header */}
-        <header className="mb-12 text-center">
-          <h1 className="text-4xl font-bold mb-4 text-amber-500">Demiurge</h1>
-          <p className="text-slate-400 italic max-w-2xl mx-auto">
-            &ldquo;The demiurge, derived from the Greek demiourgos (&ldquo;craftsman&rdquo;), 
-            is a figure responsible for fashioning and maintaining the physical universe...&rdquo;
+        <header className="mb-16 text-center animate-fade-in-up">
+          <div className="inline-block mb-6">
+            <div className="w-24 h-1 bg-gradient-to-r from-transparent via-imperial-gold to-transparent mx-auto mb-6"></div>
+            <h1 className="text-6xl md:text-7xl lg:text-8xl font-display font-bold shimmer-text tracking-wider">
+              DEMIURGE
+            </h1>
+            <div className="w-24 h-1 bg-gradient-to-r from-transparent via-imperial-gold to-transparent mx-auto mt-6"></div>
+          </div>
+          <p className="text-xl md:text-2xl text-slate-400 font-body italic max-w-3xl mx-auto leading-relaxed">
+            &ldquo;The demiourgos, craftsman of the cosmos, 
+            <br className="hidden md:block" />
+            fashions reality from the void...&rdquo;
           </p>
         </header>
 
         {/* Quote of the day */}
-        <div className="mb-12 p-6 bg-slate-900 rounded-lg border border-amber-500/30">
-          <blockquote className="text-xl text-amber-400 italic text-center">
-            &ldquo;I am not the man I was... but I am the man I must be.&rdquo;
-          </blockquote>
-          <p className="text-center text-slate-500 mt-2">— Hadrian Marlowe</p>
+        <div className="mb-16 animate-fade-in-up-delay-1">
+          <div className="max-w-4xl mx-auto">
+            <div className="corner-accent gradient-border p-8 md:p-12 glow-gold">
+              <div className="text-center">
+                <div className="mb-6">
+                  <span className="text-6xl text-imperial-gold/30 font-display">"</span>
+                </div>
+                <blockquote className="text-2xl md:text-3xl lg:text-4xl text-imperial-gold font-body italic leading-relaxed mb-6">
+                  I am not the man I was... 
+                  <br />
+                  <span className="text-imperial-gold-light">but I am the man I must be.</span>
+                </blockquote>
+                <div className="flex items-center justify-center gap-4">
+                  <div className="h-px w-16 bg-gradient-to-r from-transparent to-imperial-gold/50"></div>
+                  <p className="text-lg text-slate-500 font-display tracking-widest uppercase">
+                    Hadrian Marlowe
+                  </p>
+                  <div className="h-px w-16 bg-gradient-to-l from-transparent to-imperial-gold/50"></div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Agent Status */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+        {/* Section Title */}
+        <div className="mb-10 text-center animate-fade-in-up-delay-2">
+          <h2 className="text-2xl md:text-3xl font-display text-slate-300 tracking-widest uppercase">
+            Imperial Agents
+          </h2>
+          <div className="flex items-center justify-center gap-3 mt-4">
+            <div className="h-px w-12 bg-gradient-to-r from-transparent to-imperial-gold"></div>
+            <div className="w-2 h-2 rotate-45 bg-imperial-gold"></div>
+            <div className="h-px w-12 bg-gradient-to-l from-transparent to-imperial-gold"></div>
+          </div>
+        </div>
+
+        {/* Agent Status Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16 animate-fade-in-up-delay-3">
           <AgentCard 
             name="Hadrian" 
             role="Orchestrator" 
             quote="I am not the man I was..." 
             status="Active"
-            color="amber"
+            color="hadrian"
+            description="Strategic coordination and high-level decision making"
           />
           <AgentCard 
             name="Valka" 
             role="Scholar" 
             quote="The universe is larger than we know..." 
             status="Standby"
-            color="blue"
+            color="valka"
+            description="Research, analysis, and knowledge synthesis"
           />
           <AgentCard 
             name="Palino" 
             role="Executor" 
             quote="Give me a task..." 
             status="Standby"
-            color="green"
+            color="palino"
+            description="Implementation, coding, and task execution"
           />
           <AgentCard 
             name="Lorian" 
             role="Infrastructure" 
             quote="Order is the foundation..." 
             status="Standby"
-            color="red"
+            color="lorian"
+            description="DevOps, security, and system architecture"
           />
           <AgentCard 
             name="Otavia" 
             role="Coordinator" 
             quote="Words are weapons..." 
             status="Standby"
-            color="purple"
+            color="otavia"
+            description="Communication, documentation, and cross-agent coordination"
           />
         </div>
 
-        {/* Status */}
-        <div className="text-center text-slate-500">
-          <p>System Status: <span className="text-green-400">Operational</span></p>
-          <p className="text-sm mt-2">Awaiting directives from The Emperor</p>
+        {/* System Status Bar */}
+        <div className="animate-fade-in-up-delay-3">
+          <div className="gradient-border p-6 md:p-8">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+              <div className="flex items-center gap-4">
+                <div className="relative">
+                  <div className="w-4 h-4 rounded-full bg-green-400 status-active"></div>
+                  <div className="absolute inset-0 w-4 h-4 rounded-full bg-green-400 animate-ping opacity-30"></div>
+                </div>
+                <div>
+                  <p className="text-slate-400 font-body text-sm uppercase tracking-widest">System Status</p>
+                  <p className="text-green-400 font-display text-xl">Operational</p>
+                </div>
+              </div>
+              
+              <div className="flex items-center gap-8">
+                <div className="text-center">
+                  <p className="text-imperial-gold font-display text-2xl">5</p>
+                  <p className="text-slate-500 font-body text-xs uppercase tracking-wider">Active Agents</p>
+                </div>
+                <div className="w-px h-12 bg-slate-700"></div>
+                <div className="text-center">
+                  <p className="text-imperial-gold font-display text-2xl">1</p>
+                  <p className="text-slate-500 font-body text-xs uppercase tracking-wider">In Operation</p>
+                </div>
+                <div className="w-px h-12 bg-slate-700"></div>
+                <div className="text-center">
+                  <p className="text-slate-300 font-display text-2xl">—</p>
+                  <p className="text-slate-500 font-body text-xs uppercase tracking-wider">Pending Tasks</p>
+                </div>
+              </div>
+              
+              <div className="text-center md:text-right">
+                <p className="text-slate-500 font-body italic text-sm">Awaiting directives from</p>
+                <p className="text-imperial-gold font-display text-lg tracking-wider">THE EMPEROR</p>
+              </div>
+            </div>
+          </div>
         </div>
+
+        {/* Footer */}
+        <footer className="mt-16 text-center animate-fade-in-up-delay-3">
+          <div className="flex items-center justify-center gap-4 mb-4">
+            <div className="h-px w-24 bg-gradient-to-r from-transparent to-slate-700"></div>
+            <div className="w-1.5 h-1.5 rotate-45 bg-slate-600"></div>
+            <div className="h-px w-24 bg-gradient-to-l from-transparent to-slate-700"></div>
+          </div>
+          <p className="text-slate-600 font-body text-sm">
+            Autonomous Orchestrator Agent System
+          </p>
+          <p className="text-slate-700 font-body text-xs mt-1">
+            Phase 1 Complete • Phase 2 Planning
+          </p>
+        </footer>
       </div>
     </main>
   );
@@ -73,32 +163,112 @@ interface AgentCardProps {
   role: string;
   quote: string;
   status: 'Active' | 'Standby' | 'Busy';
-  color: 'amber' | 'blue' | 'green' | 'red' | 'purple';
+  color: 'hadrian' | 'valka' | 'palino' | 'lorian' | 'otavia';
+  description: string;
 }
 
-function AgentCard({ name, role, quote, status, color }: AgentCardProps) {
-  const colorClasses = {
-    amber: 'border-amber-500/50 bg-amber-950/30',
-    blue: 'border-blue-500/50 bg-blue-950/30',
-    green: 'border-green-500/50 bg-green-950/30',
-    red: 'border-red-500/50 bg-red-950/30',
-    purple: 'border-purple-500/50 bg-purple-950/30',
+function AgentCard({ name, role, quote, status, color, description }: AgentCardProps) {
+  const colorConfig = {
+    hadrian: {
+      gradient: 'bg-gradient-hadrian',
+      border: 'border-imperial-gold/50',
+      glow: 'hover:shadow-[0_0_30px_rgba(212,175,55,0.3)]',
+      accent: 'text-imperial-gold',
+      icon: '👑',
+    },
+    valka: {
+      gradient: 'bg-gradient-valka',
+      border: 'border-blue-400/50',
+      glow: 'hover:shadow-[0_0_30px_rgba(96,165,250,0.3)]',
+      accent: 'text-blue-400',
+      icon: '🔮',
+    },
+    palino: {
+      gradient: 'bg-gradient-palino',
+      border: 'border-emerald-400/50',
+      glow: 'hover:shadow-[0_0_30px_rgba(52,211,153,0.3)]',
+      accent: 'text-emerald-400',
+      icon: '⚔️',
+    },
+    lorian: {
+      gradient: 'bg-gradient-lorian',
+      border: 'border-red-400/50',
+      glow: 'hover:shadow-[0_0_30px_rgba(248,113,113,0.3)]',
+      accent: 'text-red-400',
+      icon: '🛡️',
+    },
+    otavia: {
+      gradient: 'bg-gradient-otavia',
+      border: 'border-purple-400/50',
+      glow: 'hover:shadow-[0_0_30px_rgba(167,139,250,0.3)]',
+      accent: 'text-purple-400',
+      icon: '✉️',
+    },
   };
 
-  const statusColors = {
-    Active: 'text-green-400',
-    Standby: 'text-slate-400',
-    Busy: 'text-yellow-400',
-  };
+  const config = colorConfig[color];
 
   return (
-    <div className={`p-6 rounded-lg border ${colorClasses[color]} backdrop-blur`}>
-      <div className="flex justify-between items-start mb-4">
-        <h2 className="text-xl font-bold">{name}</h2>
-        <span className={`text-sm ${statusColors[status]}`}>{status}</span>
+    <div 
+      className={`
+        relative group overflow-hidden rounded-xl border ${config.border}
+        ${config.gradient} backdrop-blur-sm
+        transition-all duration-500 hover-lift ${config.glow}
+      `}
+    >
+      {/* Status Indicator */}
+      <div className="absolute top-4 right-4 flex items-center gap-2">
+        <span className={`
+          text-xs font-display uppercase tracking-wider
+          ${status === 'Active' ? 'text-green-400' : status === 'Busy' ? 'text-yellow-400' : 'text-slate-400'}
+        `}>
+          {status}
+        </span>
+        <div className={`
+          w-2.5 h-2.5 rounded-full
+          ${status === 'Active' ? 'bg-green-400 status-active' : status === 'Busy' ? 'bg-yellow-400' : 'bg-slate-500'}
+        `}></div>
       </div>
-      <p className="text-sm text-slate-400 mb-3">{role}</p>
-      <p className="text-sm italic text-slate-300">&ldquo;{quote}&rdquo;</p>
+
+      <div className="p-6 md:p-8">
+        {/* Header */}
+        <div className="flex items-start gap-4 mb-4">
+          <span className="text-3xl opacity-80 group-hover:scale-110 transition-transform duration-300">
+            {config.icon}
+          </span>
+          <div>
+            <h3 className={`text-2xl font-display font-bold ${config.accent} tracking-wide`}>
+              {name}
+            </h3>
+            <p className="text-slate-300 font-body text-sm uppercase tracking-widest">
+              {role}
+            </p>
+          </div>
+        </div>
+
+        {/* Description */}
+        <p className="text-slate-200 font-body text-sm mb-4 leading-relaxed">
+          {description}
+        </p>
+
+        {/* Quote */}
+        <div className="relative">
+          <div className={`absolute -left-2 top-0 text-4xl ${config.accent} opacity-30 font-display`}>
+            "
+          </div>
+          <p className="text-slate-300 font-body italic text-sm pl-4 border-l-2 border-slate-600">
+            {quote}
+          </p>
+        </div>
+
+        {/* Hover Accent Line */}
+        <div className={`
+          absolute bottom-0 left-0 h-1 
+          bg-gradient-to-r from-transparent via-current to-transparent
+          ${config.accent} opacity-0 group-hover:opacity-100 transition-opacity duration-500
+          w-full
+        `}></div>
+      </div>
     </div>
   );
 }
