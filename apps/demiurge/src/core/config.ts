@@ -13,7 +13,7 @@ const ConfigSchema = z.object({
     authorEmail: z.string().default('hadrian@demiurge.local'),
   }),
   github: z.object({
-    token: z.string().min(1, 'GitHub token is required'),
+    token: z.string().optional().default(''),
   }),
   llm: z.object({
     opencode: z.object({
@@ -34,10 +34,10 @@ const ConfigSchema = z.object({
     }),
   }),
   storage: z.object({
-    dataDir: z.string().default('/data'),
-    databasePath: z.string().default('/data/demiurge.db'),
-    workspacesDir: z.string().default('/data/workspaces'),
-    directivesDir: z.string().default('/data/directives'),
+    dataDir: z.string().default('.data'),
+    databasePath: z.string().default('.data/demiurge.db'),
+    workspacesDir: z.string().default('.data/workspaces'),
+    directivesDir: z.string().default('directives'),
   }),
   agents: z.object({
     enabled: z.array(z.enum(['hadrian', 'valka', 'palino', 'lorian', 'otavia'])).default(['hadrian']),

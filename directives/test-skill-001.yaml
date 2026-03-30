@@ -1,0 +1,9 @@
+id: test-skill-001
+from: The Emperor
+priority: high
+task: Read the file STATUS.md and show me its contents
+context: Testing the new skills system with file-read skill
+tags:
+  - test
+  - skills
+  - file-read

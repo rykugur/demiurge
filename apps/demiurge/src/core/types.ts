@@ -61,9 +61,11 @@ export interface AgentResponse {
 }
 
 export interface AgentAction {
-  type: 'commit' | 'create_file' | 'modify_file' | 'delete_file' | 'run_command';
-  description: string;
-  payload: unknown;
+  type: 'commit' | 'create_file' | 'modify_file' | 'delete_file' | 'run_command' | 'file_read';
+  description?: string;
+  payload?: unknown;
+  path?: string;
+  size?: number;
 }
 
 export interface LLMProvider {
