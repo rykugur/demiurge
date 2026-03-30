@@ -22,6 +22,10 @@
             buildInputs = [
               pkgs.bun
               pkgs.nodejs
+              pkgs.nodePackages.node-gyp
+              pkgs.python3
+              pkgs.gcc
+              pkgs.gnumake
 
               (pkgs.writeShellScriptBin "tofu" ''
                 exec ${pkgs.opentofu}/bin/tofu -chdir=infra "$@"
