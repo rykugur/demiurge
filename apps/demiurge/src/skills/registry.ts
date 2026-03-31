@@ -1,6 +1,8 @@
 import type { Skill, SkillContext, SkillResult } from './types';
 import { FileReadSkill } from './definitions/file-read';
 import { FileWriteSkill } from './definitions/file-write';
+import { GitCommitSkill } from './definitions/git-commit';
+import { ShellExecSkill } from './definitions/shell-exec';
 
 export class SkillRegistry {
   private skills: Map<string, Skill> = new Map();
@@ -9,6 +11,8 @@ export class SkillRegistry {
     // Register built-in skills
     this.registerSkill(new FileReadSkill());
     this.registerSkill(new FileWriteSkill());
+    this.registerSkill(new GitCommitSkill());
+    this.registerSkill(new ShellExecSkill());
   }
 
   registerSkill(skill: Skill): void {
