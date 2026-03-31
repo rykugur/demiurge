@@ -114,6 +114,99 @@ The task is complete. As promised.`,
       }
     }
 
+    // Check if this is a git commit task
+    if (this.isGitCommitTask(task.description)) {
+      const commitInfo = this.extractCommitInfo(task.description);
+      
+      if (commitInfo) {
+        console.log(`Palino: Creating git commit...`);
+        
+        const result = await this.registry.executeSkill(
+          'git-commit',
+          { 
+            message: commitInfo.message,
+            files: commitInfo.files,
+          },
+          context
+        );
+
+        if (result.success) {
+          const data = result.data as { sha: string; message: string; files: string[] };
+          return {
+            success: true,
+            output: `Palino has created a commit.
+
+Commit SHA: ${data.sha}
+Message: ${data.message}
+Files: ${data.files.join(', ') || 'all staged changes'}
+
+The task is complete. As promised.`,
+            actions: [
+              {
+                type: 'commit',
+                description: `Created commit ${data.sha.slice(0, 7)}: ${data.message}`,
+                payload: { sha: data.sha, message: data.message },
+              },
+            ],
+          };
+        } else {
+          return {
+            success: false,
+            output: `Palino attempted to create a commit but encountered an error: ${result.error}`,
+            error: result.error,
+            actions: [],
+          };
+        }
+      }
+    }
+
+    // Check if this is a shell execution task
+    if (this.isShellExecTask(task.description)) {
+      const command = this.extractCommand(task.description);
+      
+      if (command) {
+        console.log(`Palino: Executing command: ${command}`);
+        
+        const result = await this.registry.executeSkill(
+          'shell-exec',
+          { command },
+          context
+        );
+
+        if (result.success) {
+          const data = result.data as { stdout: string; stderr: string; exitCode: number };
+          return {
+            success: true,
+            output: `Palino has executed the command.
+
+Command: ${command}
+Exit code: ${data.exitCode}
+
+Output:
+${'─'.repeat(60)}
+${data.stdout || '(no output)'}
+${'─'.repeat(60)}
+${data.stderr ? `\nStderr:\n${data.stderr}\n` : ''}
+The task is complete. As promised.`,
+            actions: [
+              {
+                type: 'run_command',
+                description: `Executed: ${command}`,
+                payload: { command, exitCode: data.exitCode },
+              },
+            ],
+          };
+        } else {
+          return {
+            success: false,
+            output: `Palino attempted to execute the command but encountered an error: ${result.error}`,
+            error: result.error,
+            actions: [],
+          };
+        }
+      }
+    }
+
     // Default response for tasks we can't handle yet
     return {
       success: true,
@@ -127,7 +220,7 @@ Right then. No need for lengthy discussion. I'll get this done.
 
 There. As promised. Task completed. What's next?
 
-(Note: This is a mock response. Skills system is active but limited skills available.)`,
+(Note: This is a mock response. Skills system is active with 4 skills available.)`,
       actions: [],
     };
   }
@@ -220,6 +313,81 @@ There. As promised. Task completed. What's next?
     }
 
     return { path: filePath, content };
+  }
+
+  private isGitCommitTask(description: string): boolean {
+    const gitCommitKeywords = [
+      'commit',
+      'git commit',
+      'create commit',
+      'make commit',
+    ];
+    const desc = description.toLowerCase();
+    return gitCommitKeywords.some(kw => desc.includes(kw));
+  }
+
+  private extractCommitInfo(description: string): { message: string; files: string[] } | null {
+    // Extract commit message
+    const messagePatterns = [
+      /with message\s+['"]([^'"]+)['"]/i,
+      /message\s+['"]([^'"]+)['"]/i,
+      /saying\s+['"]([^'"]+)['"]/i,
+      /commit\s+['"]([^'"]+)['"]/i,
+    ];
+
+    let message = '';
+    for (const pattern of messagePatterns) {
+      const match = description.match(pattern);
+      if (match && match[1]) {
+        message = match[1];
+        break;
+      }
+    }
+
+    if (!message) {
+      // Default message if none specified
+      message = 'Update from Demiurge';
+    }
+
+    // Extract specific files (if mentioned)
+    const files: string[] = [];
+    const filesPattern = /(?:files?|stage)\s+(.+?)(?:\s+with|\s*$)/i;
+    const filesMatch = description.match(filesPattern);
+    if (filesMatch) {
+      files.push(...filesMatch[1].split(/,\s+|\s+and\s+/));
+    }
+
+    return { message, files };
+  }
+
+  private isShellExecTask(description: string): boolean {
+    const shellExecKeywords = [
+      'run command',
+      'execute command',
+      'run shell',
+      'execute shell',
+      'run:',
+      'execute:',
+    ];
+    const desc = description.toLowerCase();
+    return shellExecKeywords.some(kw => desc.includes(kw));
+  }
+
+  private extractCommand(description: string): string | null {
+    // Extract command after keywords
+    const patterns = [
+      /(?:run|execute)(?:\s+command)?\s*:\s*(.+?)(?:\s*$)/i,
+      /(?:run|execute)(?:\s+command)?\s+['"](.+?)['"]/i,
+    ];
+
+    for (const pattern of patterns) {
+      const match = description.match(pattern);
+      if (match && match[1]) {
+        return match[1].trim();
+      }
+    }
+
+    return null;
   }
 }
 

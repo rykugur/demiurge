@@ -170,7 +170,7 @@ class DemiurgeServer {
     }
     
     // Implementation tasks (default to Palino)
-    if (desc.includes('implement') || desc.includes('create') || desc.includes('build') || desc.includes('code') || desc.includes('read') || desc.includes('file')) {
+    if (desc.includes('implement') || desc.includes('create') || desc.includes('build') || desc.includes('code') || desc.includes('read') || desc.includes('file') || desc.includes('run command') || desc.includes('execute command')) {
       return AgentType.PALINO;
     }
     
