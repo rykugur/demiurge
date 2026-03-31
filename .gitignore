@@ -2,3 +2,16 @@
 .envrc
 .worktrees/
 node_modules/
+
+# Build artifacts
+.next/
+tsconfig.tsbuildinfo
+next-env.d.ts
+
+# Runtime data
+.data/
+directives/
+*.db
+
+# Test files
+hello.txt
