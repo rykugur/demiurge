@@ -4,6 +4,7 @@ kind: Kustomization
 namespace: demiurge
 
 resources:
+  - namespace.yaml
   - deployment.yaml
   - service.yaml
   - pvc.yaml
@@ -13,3 +14,7 @@ resources:
 commonLabels:
   app: demiurge
   tier: orchestrator
+
+images:
+  - name: demiurge
+    newTag: deploy
