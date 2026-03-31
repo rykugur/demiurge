@@ -72,6 +72,48 @@ The task is complete. As promised.`,
       }
     }
 
+    // Check if this is a file write task
+    if (this.isFileWriteTask(task.description)) {
+      const fileInfo = this.extractFileWriteInfo(task.description);
+      
+      if (fileInfo) {
+        console.log(`Palino: Writing file ${fileInfo.path}...`);
+        
+        const result = await this.registry.executeSkill(
+          'file-write',
+          { path: fileInfo.path, content: fileInfo.content },
+          context
+        );
+
+        if (result.success) {
+          const data = result.data as { path: string; bytesWritten: number; action: string };
+          return {
+            success: true,
+            output: `Palino has ${data.action} the file: ${data.path}
+
+Bytes written: ${data.bytesWritten}
+
+The task is complete. As promised.`,
+            actions: [
+              {
+                type: 'create_file',
+                path: data.path,
+                description: `File ${data.action} successfully`,
+                payload: { bytesWritten: data.bytesWritten },
+              },
+            ],
+          };
+        } else {
+          return {
+            success: false,
+            output: `Palino attempted to write the file but encountered an error: ${result.error}`,
+            error: result.error,
+            actions: [],
+          };
+        }
+      }
+    }
+
     // Default response for tasks we can't handle yet
     return {
       success: true,
@@ -120,6 +162,64 @@ There. As promised. Task completed. What's next?
     }
 
     return null;
+  }
+
+  private isFileWriteTask(description: string): boolean {
+    const fileWriteKeywords = [
+      'create file',
+      'create a file',
+      'write file',
+      'write to file',
+      'save file',
+      'create a new file',
+    ];
+    const desc = description.toLowerCase();
+    return fileWriteKeywords.some(kw => desc.includes(kw));
+  }
+
+  private extractFileWriteInfo(description: string): { path: string; content: string } | null {
+    // Extract file path
+    const pathPatterns = [
+      /(?:called|named)\s+['"]?([^'"\s]+)['"]?/i,
+      /(?:file|to)\s+['"]?([^'"\s]+\.[^'"\s]+)['"]?/i,
+    ];
+
+    let filePath: string | null = null;
+    for (const pattern of pathPatterns) {
+      const match = description.match(pattern);
+      if (match && match[1]) {
+        filePath = match[1];
+        break;
+      }
+    }
+
+    if (!filePath) return null;
+
+    // Extract content (between quotes after "with content" or similar)
+    const contentPatterns = [
+      /with content\s+['"]([^'"]+)['"]/i,
+      /containing\s+['"]([^'"]+)['"]/i,
+      /with\s+['"]([^'"]+)['"]\s*(?:inside|in it)?/i,
+    ];
+
+    let content = '';
+    for (const pattern of contentPatterns) {
+      const match = description.match(pattern);
+      if (match && match[1]) {
+        content = match[1];
+        break;
+      }
+    }
+
+    // If no quoted content found, try to extract after keywords
+    if (!content) {
+      const simpleContentMatch = description.match(/with content\s+(.+?)(?:\s*$|\s+and)/i);
+      if (simpleContentMatch) {
+        content = simpleContentMatch[1].trim();
+      }
+    }
+
+    return { path: filePath, content };
   }
 }
 

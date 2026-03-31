@@ -1,5 +1,6 @@
 import type { Skill, SkillContext, SkillResult } from './types';
 import { FileReadSkill } from './definitions/file-read';
+import { FileWriteSkill } from './definitions/file-write';
 
 export class SkillRegistry {
   private skills: Map<string, Skill> = new Map();
@@ -7,6 +8,7 @@ export class SkillRegistry {
   constructor() {
     // Register built-in skills
     this.registerSkill(new FileReadSkill());
+    this.registerSkill(new FileWriteSkill());
   }
 
   registerSkill(skill: Skill): void {
