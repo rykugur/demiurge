@@ -1,0 +1,34 @@
+# Copy to terraform.sops.tfvars and fill in sensitive values.
+# Then encrypt with: sops -e terraform.sops.tfvars > tmp && mv tmp terraform.sops.tfvars
+# Use the helper script: ./scripts/tofu.sh plan
+#
+# Required variables (will be encrypted):
+
+proxmox_api_token = "root@pam!tokenid=secret"
+state_passphrase  = "generate-a-secure-passphrase-here"
+
+
+# Optional overrides (defaults are set in variables.tf):
+# proxmox_endpoint = "https://roshar.local.ryk.sh:8006"
+# proxmox_node     = "roshar"
+# talos_version    = "v1.6.0"
+# cluster_name     = "demiurge"
+
+# Network settings (adjust for your network):
+# gateway          = "192.168.1.1"
+# dns_servers      = ["192.168.1.1"]
+# subnet_prefix    = 24
+
+# Control plane settings:
+# cp_vm_id         = 101
+# cp_hostname      = "demiurge-cp-01"
+# cp_ip            = "192.168.1.101"
+# cp_cpu           = 2
+# cp_memory        = 4096
+# cp_disk_size     = 20
+
+# Worker nodes:
+# workers = [
+#   { vm_id = 201, hostname = "demiurge-worker-01", ip = "192.168.1.201" },
+#   { vm_id = 202, hostname = "demiurge-worker-02", ip = "192.168.1.202" },
+# ]

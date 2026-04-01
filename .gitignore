@@ -15,3 +15,12 @@ directives/
 
 # Test files
 hello.txt
+
+# OpenTofu - never commit unencrypted secrets
+infra/terraform.tfvars
+infra/*.tfstate.backup
+infra/.terraform.lock.hcl
+!infra/.terraform/
+!infra/.terraform.lock.hcl
+# Note: terraform.sops.tfvars IS encrypted and SHOULD be committed
+# Note: terraform.tfstate IS encrypted by OpenTofu and SHOULD be committed

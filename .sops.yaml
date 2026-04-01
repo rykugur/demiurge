@@ -1,0 +1,4 @@
+creation_rules:
+  - path_regex: .*\.sops\.tfvars$
+    age: >-
+      age1zrsq6443zacdx3tpsfryeg2t5wqxz465cxezmar4qu8zgh00v5fsc8vypu,age1kah7ss6eay00u8j95lul79u2rkfqml5r9fe7jetemlhhrvpztfrs6gvz85,age1faqduu6n6w53dzdk9fhu5fc5q3kq59l5as8pu8ecgu8trtudeunql9004r

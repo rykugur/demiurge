@@ -28,7 +28,7 @@
               pkgs.gnumake
 
               (pkgs.writeShellScriptBin "tofu" ''
-                exec ${pkgs.opentofu}/bin/tofu -chdir=infra "$@"
+                exec ${pkgs.opentofu}/bin/tofu -chdir=infrastructure/tofu "$@"
               '')
 
               pkgs.fluxcd
