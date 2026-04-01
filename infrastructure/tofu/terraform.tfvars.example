@@ -1,58 +1,30 @@
-# Infrastructure Configuration
-# Copy this file to terraform.tfvars and customize
+# Copy to terraform.tfvars and fill in sensitive values.
+# Do NOT commit terraform.tfvars — it contains secrets.
 
-# Proxmox connection
-proxmox_endpoint = "https://192.168.1.100:8006"
-proxmox_username = "root@pam"
-proxmox_password = "CHANGE_ME"
+proxmox_api_token = "root@pam!tokenid=secret"
 
-# Cluster settings
-cluster_name = "demiurge-cluster"
-talos_version = "v1.6.0"
-kubernetes_version = "1.29.0"
 
-# Control plane nodes (at least 1 for single-node, 3 for HA)
-control_plane_nodes = {
-  "cp-01" = {
-    host_node   = "pve"
-    ip          = "192.168.1.101"
-    mac_address = "BC:24:11:00:00:01"
-    vm_id       = 101
-    cpu         = 2
-    memory      = 4096
-    disk_size   = 20
-  }
-  # Add more for HA:
-  # "cp-02" = {
-  #   host_node   = "pve"
-  #   ip          = "192.168.1.102"
-  #   mac_address = "BC:24:11:00:00:02"
-  #   vm_id       = 102
-  #   cpu         = 2
-  #   memory      = 4096
-  #   disk_size   = 20
-  # }
-}
+# Optional overrides (defaults are set in variables.tf):
+# proxmox_endpoint = "https://roshar.local.ryk.sh:8006"
+# proxmox_node     = "roshar"
+# talos_version    = "v1.6.0"
+# cluster_name     = "demiurge"
 
-# Worker nodes
-worker_nodes = {
-  "worker-01" = {
-    host_node   = "pve"
-    ip          = "192.168.1.201"
-    mac_address = "BC:24:11:00:01:01"
-    vm_id       = 201
-    cpu         = 4
-    memory      = 8192
-    disk_size   = 50
-  }
-  # Add more workers as needed:
-  # "worker-02" = {
-  #   host_node   = "pve"
-  #   ip          = "192.168.1.202"
-  #   mac_address = "BC:24:11:00:01:02"
-  #   vm_id       = 202
-  #   cpu         = 4
-  #   memory      = 8192
-  #   disk_size   = 50
-  # }
-}
+# Network settings (adjust for your network):
+# gateway          = "192.168.1.1"
+# dns_servers      = ["192.168.1.1"]
+# subnet_prefix    = 24
+
+# Control plane settings:
+# cp_vm_id         = 101
+# cp_hostname      = "demiurge-cp-01"
+# cp_ip            = "192.168.1.101"
+# cp_cpu           = 2
+# cp_memory        = 4096
+# cp_disk_size     = 20
+
+# Worker nodes:
+# workers = [
+#   { vm_id = 201, hostname = "demiurge-worker-01", ip = "192.168.1.201" },
+#   { vm_id = 202, hostname = "demiurge-worker-02", ip = "192.168.1.202" },
+# ]

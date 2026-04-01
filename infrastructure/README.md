@@ -1,20 +1,13 @@
 # Infrastructure Setup
 
-This directory contains OpenTofu (Terraform) configurations for provisioning Demiurge infrastructure.
+OpenTofu configuration for provisioning Demiurge Kubernetes cluster on Proxmox.
 
 ## Architecture
 
 - **OpenTofu**: Infrastructure as Code for VM provisioning
 - **Talos Linux**: Minimal, immutable Kubernetes OS
-- **Proxmox**: Virtualization platform (adjust for your environment)
-- **FluxCD**: GitOps for Kubernetes application deployment
-
-## Prerequisites
-
-- OpenTofu (or Terraform) >= 1.5
-- `talosctl` CLI tool
-- `kubectl`
-- Access to Proxmox (or alternative virtualization platform)
+- **Proxmox**: Virtualization platform
+- **FluxCD**: GitOps for Kubernetes application deployment (in `clusters/`)
 
 ## Quick Start
 
@@ -23,18 +16,15 @@ This directory contains OpenTofu (Terraform) configurations for provisioning Dem
 ```bash
 cd infrastructure/tofu
 cp terraform.tfvars.example terraform.tfvars
-# Edit terraform.tfvars with your values
+# Edit terraform.tfvars with your Proxmox API token
 ```
 
-### 2. Initialize OpenTofu
+### 2. Initialize and Apply
 
 ```bash
+# Initialize providers
 tofu init
-```
 
-### 3. Plan & Apply
-
-```bash
 # Preview changes
 tofu plan
 
@@ -43,70 +33,97 @@ tofu apply
 ```
 
 This will:
-- Create Talos Linux VMs on Proxmox
+- Download Talos Linux image
+- Create control plane and worker VMs
 - Bootstrap Kubernetes cluster
-- Generate kubeconfig
+- Output kubeconfig
 
-### 4. Access Cluster
+### 3. Access Cluster
 
 ```bash
 # Export kubeconfig
 export KUBECONFIG=$(tofu output -raw kubeconfig)
 
-# Verify
+# Verify nodes
 kubectl get nodes
+
+# Or use talosctl
+export TALOSCONFIG=$(tofu output -raw talosconfig)
+talosctl dashboard
 ```
 
-### 5. Install FluxCD
+### 4. Deploy Demiurge with FluxCD
 
 ```bash
-# Install FluxCD
+# Install Flux
 flux install
 
 # Configure GitOps
 kubectl apply -f ../../clusters/demiurge-cluster/
+
+# Watch deployment
+flux get kustomizations --watch
 ```
 
-## Directory Structure
+## File Structure
 
 ```
-infrastructure/
-├── tofu/
-│   ├── main.tf                  # Main OpenTofu configuration
-│   ├── terraform.tfvars.example # Example variables
-│   └── modules/
-│       └── talos/               # Talos VM module
-└── ...
+infrastructure/tofu/
+├── main.tf                    # VM resources and Talos bootstrap
+├── variables.tf               # Input variables
+├── outputs.tf                 # Output values
+├── providers.tf               # Provider configuration
+├── images.tf                  # Talos image download
+├── terraform.tfvars.example   # Example variables
+└── README.md                  # This file
 
 clusters/
-└── demiurge-cluster/            # FluxCD configurations
-    ├── gotk-sync.yaml           # GitRepository source
-    └── demiurge-kustomization.yaml  # App deployment
+└── demiurge-cluster/          # FluxCD configurations
+    ├── gotk-sync.yaml         # GitRepository source
+    └── demiurge-kustomization.yaml
 ```
 
 ## Customization
 
-### Using Different Virtualization Platform
+### Adjust Node Count
 
-Replace the Proxmox provider in `main.tf` with your platform:
-- VMware vSphere
-- AWS/Azure/GCP
-- libvirt
-- etc.
+Edit `terraform.tfvars`:
 
-### Talos Configuration
+```hcl
+# Single control plane (minimal)
+workers = [
+  { vm_id = 201, hostname = "demiurge-worker-01", ip = "192.168.1.201" },
+]
 
-Modify the `config_patches` in `main.tf` to customize Talos:
-- Network configuration
-- System extensions
-- Kubernetes features
+# Or add more workers
+workers = [
+  { vm_id = 201, hostname = "demiurge-worker-01", ip = "192.168.1.201" },
+  { vm_id = 202, hostname = "demiurge-worker-02", ip = "192.168.1.202" },
+  { vm_id = 203, hostname = "demiurge-worker-03", ip = "192.168.1.203" },
+]
+```
 
-### Node Count
+### Change Resources
 
-Adjust `control_plane_nodes` and `worker_nodes` in `terraform.tfvars`:
-- Minimum: 1 control plane
-- HA Setup: 3 control planes
-- Scale workers as needed
+```hcl
+# Control plane
+cp_cpu       = 4
+cp_memory    = 8192
+cp_disk_size = 50
+
+# Workers
+worker_cpu       = 8
+worker_memory    = 16384
+worker_disk_size = 100
+```
+
+### Network Configuration
+
+```hcl
+gateway       = "10.0.0.1"
+dns_servers   = ["10.0.0.1", "8.8.8.8"]
+subnet_prefix = 24
+```
 
 ## Destroy Infrastructure
 
@@ -118,24 +135,36 @@ tofu destroy
 
 ### VMs not booting
 
-Check Proxmox console for boot errors. Ensure Talos image downloaded correctly.
+Check Proxmox console for boot errors:
+```bash
+talosctl --talosconfig <(tofu output -raw talosconfig) dashboard
+```
 
 ### Cluster not forming
 
-Check network connectivity between nodes:
+Check Talos logs:
 ```bash
-talosctl --talosconfig <(tofu output -raw talos_config) dashboard
+talosctl --talosconfig <(tofu output -raw talosconfig) logs
 ```
 
 ### FluxCD not syncing
 
-Check Flux logs:
 ```bash
 flux logs
+kubectl get gitrepositories -A
+kubectl get kustomizations -A
 ```
+
+## Security Notes
+
+- Keep `terraform.tfvars` out of git (it's in .gitignore)
+- Use Proxmox API tokens with minimal permissions
+- Talos Linux runs with immutable filesystem
+- All changes go through GitOps (FluxCD)
 
 ## Resources
 
 - [Talos Linux Docs](https://www.talos.dev/)
 - [OpenTofu Docs](https://opentofu.org/docs/)
 - [FluxCD Docs](https://fluxcd.io/docs/)
+- [Proxmox Provider](https://registry.terraform.io/providers/bpg/proxmox/latest/docs)
