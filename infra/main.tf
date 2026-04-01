@@ -79,7 +79,7 @@ resource "proxmox_virtual_environment_vm" "control_plane" {
 
   disk {
     datastore_id = var.vm_storage
-    file_id      = proxmox_virtual_environment_download_file.talos_nocloud.id
+    file_id      = proxmox_download_file.talos_nocloud.id
     interface    = "scsi0"
     size         = var.cp_disk_size
     discard      = "on"
@@ -141,7 +141,7 @@ resource "proxmox_virtual_environment_vm" "workers" {
 
   disk {
     datastore_id = var.vm_storage
-    file_id      = proxmox_virtual_environment_download_file.talos_nocloud.id
+    file_id      = proxmox_download_file.talos_nocloud.id
     interface    = "scsi0"
     size         = var.worker_disk_size
     discard      = "on"

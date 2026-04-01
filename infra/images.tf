@@ -19,7 +19,7 @@ resource "talos_image_factory_schematic" "this" {
 }
 
 # Download the Talos nocloud image to Proxmox
-resource "proxmox_virtual_environment_download_file" "talos_nocloud" {
+resource "proxmox_download_file" "talos_nocloud" {
   content_type = "iso"
   datastore_id = var.image_storage
   node_name    = var.proxmox_node
