@@ -35,10 +35,22 @@
                 REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || echo "$PWD")"
                 TFVARS="$REPO_ROOT/infra/terraform.sops.tfvars"
 
+                # Commands that need variable injection via -var-file
+                VAR_FILE_CMDS="plan|apply|destroy|import|refresh|taint|untaint"
+                
                 if [ -f "$TFVARS" ]; then
+                  # Always export passphrase for state decryption
                   export TF_VAR_state_passphrase
                   TF_VAR_state_passphrase="$(sops -d "$TFVARS" | grep state_passphrase | sed 's/.*= *"\(.*\)"/\1/')"
-                  exec sops exec-file "$TFVARS" "${pkgs.opentofu}/bin/tofu -chdir=infra $* -var-file={}"
+                  
+                  # Check if first argument is a command that needs var-file
+                  if [[ "$1" =~ ^($VAR_FILE_CMDS)$ ]]; then
+                    # Use sops exec-file for variable injection
+                    exec sops exec-file "$TFVARS" "${pkgs.opentofu}/bin/tofu -chdir=infra $* -var-file={}"
+                  else
+                    # For output, show, state, etc. just run with passphrase exported
+                    exec ${pkgs.opentofu}/bin/tofu -chdir=infra "$@"
+                  fi
                 else
                   exec ${pkgs.opentofu}/bin/tofu -chdir=infra "$@"
                 fi
