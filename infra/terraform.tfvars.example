@@ -1,6 +1,5 @@
 # Copy to terraform.sops.tfvars and fill in sensitive values.
 # Then encrypt with: sops -e terraform.sops.tfvars > tmp && mv tmp terraform.sops.tfvars
-# Use the helper script: ./scripts/tofu.sh plan
 #
 # Required variables (will be encrypted):
 
@@ -14,21 +13,26 @@ state_passphrase  = "generate-a-secure-passphrase-here"
 # talos_version    = "v1.6.0"
 # cluster_name     = "demiurge"
 
-# Network settings (adjust for your network):
-# gateway          = "192.168.1.1"
-# dns_servers      = ["192.168.1.1"]
+# Network settings:
+# gateway          = "10.3.10.1"
+# dns_servers      = ["10.3.10.1"]
 # subnet_prefix    = 24
 
 # Control plane settings:
-# cp_vm_id         = 101
+# cp_vm_id         = 10200
 # cp_hostname      = "demiurge-cp-01"
-# cp_ip            = "192.168.1.101"
+# cp_ip            = "10.3.10.200"
 # cp_cpu           = 2
 # cp_memory        = 4096
 # cp_disk_size     = 20
 
 # Worker nodes:
 # workers = [
-#   { vm_id = 201, hostname = "demiurge-worker-01", ip = "192.168.1.201" },
-#   { vm_id = 202, hostname = "demiurge-worker-02", ip = "192.168.1.202" },
+#   { vm_id = 10201, hostname = "demiurge-worker-01", ip = "10.3.10.201" },
+#   { vm_id = 10202, hostname = "demiurge-worker-02", ip = "10.3.10.202" },
 # ]
+
+# Metallb load balancer IP range:
+# Load balancer IP: 10.3.10.210
+# Available range: 10.3.10.200-10.3.10.209 (for nodes)
+#                  10.3.10.210 (reserved for metallb)

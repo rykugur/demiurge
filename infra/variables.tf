@@ -26,6 +26,19 @@ variable "proxmox_node" {
   default     = "roshar"
 }
 
+variable "proxmox_ssh_username" {
+  description = "SSH username for Proxmox host"
+  type        = string
+  default     = "root"
+}
+
+variable "proxmox_ssh_private_key" {
+  description = "SSH private key for Proxmox host (path or content)"
+  type        = string
+  sensitive   = true
+  default     = "~/.ssh/id_ed25519"
+}
+
 # ── Talos ────────────────────────────────────────────────────────────────
 
 variable "talos_version" {
@@ -45,13 +58,13 @@ variable "cluster_name" {
 variable "gateway" {
   description = "Default gateway IP"
   type        = string
-  default     = "192.168.1.1"
+  default     = "10.3.10.1"
 }
 
 variable "dns_servers" {
   description = "DNS server IPs"
   type        = list(string)
-  default     = ["192.168.1.1"]
+  default     = ["10.3.10.1"]
 }
 
 variable "subnet_prefix" {
@@ -85,7 +98,7 @@ variable "vm_storage" {
 variable "cp_vm_id" {
   description = "VM ID for the control plane node"
   type        = number
-  default     = 101
+  default     = 10200
 }
 
 variable "cp_hostname" {
@@ -97,7 +110,7 @@ variable "cp_hostname" {
 variable "cp_ip" {
   description = "IP address for the control plane node"
   type        = string
-  default     = "192.168.1.101"
+  default     = "10.3.10.200"
 }
 
 variable "cp_cpu" {
@@ -128,7 +141,7 @@ variable "workers" {
     ip       = string
   }))
   default = [
-    { vm_id = 201, hostname = "demiurge-worker-01", ip = "192.168.1.201" },
+    { vm_id = 10201, hostname = "demiurge-worker-01", ip = "10.3.10.201" },
   ]
 }
 
